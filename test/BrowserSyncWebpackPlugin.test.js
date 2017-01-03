@@ -1,10 +1,4 @@
-const rimraf = require('rimraf');
-const mkdirp = require('mkdirp');
-const { promisify } = require('../src/util');
 const BrowserSyncWebpackPlugin = require('../src/BrowserSyncWebpackPlugin');
-
-const rimrafAsync = promisify(rimraf);
-const mkdirpAsync = promisify(mkdirp);
 
 const noop = () => {};
 const nodeCallback = function () {
