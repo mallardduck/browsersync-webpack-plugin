@@ -2,7 +2,6 @@ const rimraf = require('rimraf');
 const mkdirp = require('mkdirp');
 const { promisify } = require('../src/util');
 const BrowserSyncWebpackPlugin = require('../src/BrowserSyncWebpackPlugin');
-const compiler = require('./fixtures/compiler');
 
 const rimrafAsync = promisify(rimraf);
 const mkdirpAsync = promisify(mkdirp);
@@ -15,18 +14,6 @@ const nodeCallback = function () {
 };
 
 describe('BrowserSyncWebpackPlugin', () => {
-  before('set up', (done) => {
-    mkdirpAsync(compiler.workspace)
-      .then(() => done())
-      .catch(err => { throw err; });
-  });
-
-  after('clean up', (done) => {
-    rimrafAsync(compiler.workspace)
-      .then(() => done())
-      .catch(err => { throw err; });
-  });
-
   describe('Events', () => {
     const mockBrowserSync = { init: nodeCallback, notify: noop };
     const mockCompiler = { plugin: nodeCallback };
