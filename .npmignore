@@ -5,9 +5,16 @@ npm-debug.log*
 coverage
 
 # Dependency directories
-node_modules
 jspm_packages
 
-# Builds
-/index.js
-/util.js
+# Sauce
+src/*
+
+# Tests
+test/*
+
+# Other non-essential stuff
+.editorconfig
+.gitignore
+.gitattributes
+.travis.yml
