@@ -47,11 +47,9 @@ module.exports = class extends EventEmitter {
       this.on(event, debuglog.bind(debuglog, `Event: ${event}`));
       this.on(event, this.options.events[event]);
     });
-    this.once('webpack.done', () => {
-      this.start();
-      this.on('webpack.done', this.reload.bind(this));
-    });
     this.on('webpack.compilation', () => this.watcher.notify('Rebuilding...'));
+    this.once('webpack.done', this.start.bind(this));
+    this.once('start', () => this.on('webpack.done', this.reload.bind(this)));
   }
 
   /**
