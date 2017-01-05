@@ -20,7 +20,5 @@ module.exports.merge = (...elements) => {
  * @returns
  */
 module.exports.uniq = (userArray) => {
-  const unique = {};
-  userArray.forEach((unusedValue, index) => { unique[userArray[index]] = true; });
-  return Object.keys(unique);
+  return [...(new Set(userArray))];
 };
