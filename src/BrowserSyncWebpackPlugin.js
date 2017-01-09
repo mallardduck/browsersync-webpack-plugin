@@ -29,9 +29,11 @@ module.exports = class extends EventEmitter {
       proxyUrl: 'https://localhost:3000',
       watch: [],
       events: {
+        setup () {},
         start () {},
-        reload () {},
-        change () {}
+        add () {},
+        change () {},
+        unlink () {}
       },
       advanced: {
         browserSync: {},
@@ -75,7 +77,12 @@ module.exports = class extends EventEmitter {
    */
   start () {
     this.setup();
-    this.watcherConfig.files = uniq(this.watcherConfig.files.concat(this.options.watch));
+    this.watcherConfig.files = [{
+      match: uniq(this.watcherConfig.files.concat(this.options.watch)),
+      fn: (event, file, stats) => {
+        this.emit(event, this, file, stats);
+      }
+    }];
     this.watcher.init(this.watcherConfig, this.emit.bind(this, 'start', this, this.watcher));
   }
 
