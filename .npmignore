@@ -4,14 +4,11 @@ npm-debug.log*
 # Coverage directory used by istanbul
 coverage
 
-# Dependency directories
-jspm_packages
-
 # Sauce
-src/*
+src
 
 # Tests
-test/*
+test
 
 # Other non-essential stuff
 .editorconfig
