@@ -80,6 +80,7 @@ module.exports = class extends EventEmitter {
     this.watcherConfig.files = [{
       match: uniq(this.watcherConfig.files.concat(this.options.watch)),
       fn: (event, file, stats) => {
+        this.compiler.run(() => this.watcher.reload(file));
         this.emit(event, this, file, stats);
       }
     }];
