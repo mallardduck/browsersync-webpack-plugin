@@ -33,6 +33,11 @@ module.exports = class extends EventEmitter {
         start () {},
         reload () {},
         change () {}
+      },
+      advanced: {
+        browserSync: {},
+        webpackDevMiddleware: {},
+        webpackHotMiddleware: {}
       }
     }, options);
     this.registerEvents();
@@ -102,7 +107,7 @@ module.exports = class extends EventEmitter {
         middleware: this.middleware
       },
       files: []
-    }, this.options.browserSyncOptions);
+    }, this.options.advanced.browserSync);
   }
 
   /**
@@ -118,11 +123,11 @@ module.exports = class extends EventEmitter {
    * @public
    */
   addWebpackDevMiddleware () {
-    this.webpackDevMiddleware = webpackDevMiddleware(this.compiler, {
+    this.webpackDevMiddleware = webpackDevMiddleware(this.compiler, merge({
       publicPath: this.options.publicPath,
       stats: false,
       noInfo: true
-    });
+    }, this.options.advanced.webpackDevMiddleware));
     this.middleware.push(this.webpackDevMiddleware);
   }
 
@@ -131,9 +136,9 @@ module.exports = class extends EventEmitter {
    * @public
    */
   addWebpackHotMiddleware () {
-    this.webpackHotMiddleware = webpackHotMiddleware(this.compiler, {
+    this.webpackHotMiddleware = webpackHotMiddleware(this.compiler, merge({
       log: this.watcher.notify.bind(this.watcher)
-    });
+    }, this.options.advanced.webpackHotMiddleware));
     this.middleware.push(this.webpackHotMiddleware);
   }
 };
