@@ -1,3 +1,5 @@
+/* eslint-env mocha */
+
 const util = require('../src/util');
 const { assert } = require('chai');
 

@@ -1,3 +1,5 @@
+/* eslint-env mocha */
+
 const BrowserSyncWebpackPlugin = require('../src/BrowserSyncWebpackPlugin');
 const { assert } = require('chai');
 
