@@ -27,4 +27,8 @@ describe('Utils', () => {
       assert.deepEqual(util.uniq(notUnique), unique);
     });
   });
+
+  describe('desire()', () => {
+    /** TODO */
+  });
 });
