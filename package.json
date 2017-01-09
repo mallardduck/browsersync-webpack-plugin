@@ -30,14 +30,15 @@
     "webpack-hot-middleware": "^2.15.0"
   },
   "scripts": {
-    "prebuild": "npm test",
+    "prebuild": "npm run lint",
     "build": "npm run build:main && npm run build:util",
     "build:main": "buble src/BrowserSyncWebpackPlugin.js -o index.js",
     "build:util": "buble src/util.js -o util.js",
-    "lint": "semistandard src/*",
-    "test": "semistandard src/* && mocha --colors",
+    "lint": "semistandard src/* test/*",
+    "pretest": "npm run build",
+    "test": "mocha --colors",
     "test:report": "istanbul cover ./node_modules/mocha/bin/_mocha -- -R spec",
     "test:coverage": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec",
-    "prepublish": "npm build"
+    "prepublish": "npm test"
   }
 }
