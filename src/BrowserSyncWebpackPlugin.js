@@ -53,7 +53,6 @@ module.exports = class extends EventEmitter {
     });
     this.on('webpack.compilation', () => this.watcher.notify('Rebuilding...'));
     this.once('webpack.done', this.start.bind(this));
-    this.once('start', () => this.on('webpack.done', this.reload.bind(this)));
   }
 
   /**
@@ -105,14 +104,6 @@ module.exports = class extends EventEmitter {
       },
       files: []
     }, this.options.advanced.browserSync);
-  }
-
-  /**
-   * Reload event is fired with webpack `done` event.
-   * @private
-   */
-  reload () {
-    this.emit('reload', this, this.watcher);
   }
 
   /**

@@ -36,21 +36,5 @@ describe('BrowserSyncWebpackPlugin', () => {
         events: { start () { done(); } }
       }).apply(mockCompiler);
     });
-
-    /**
-     * (1) Bind a listener to be triggered only once on the `start` event.
-     * (2) Once the listener is bound, check the `start` listener count.
-     * (3) `reload` listener then checks the `start` listener count to ensure that it has been fired.
-     */
-    it('fire a reload event only after `start` event has fired', done => {
-      let startCount = 0;
-      const test = makePluginInstance({
-        events: { reload () { assert.notEqual(test.listenerCount('start'), startCount); done(); } } // (3)
-      });
-      test.once('start', noop); // (1)
-      startCount = test.listenerCount('start'); // (2)
-      test.apply(mockCompiler); // should fire `start`
-      test.apply(mockCompiler); // should fire `reload`
-    });
   });
 });
