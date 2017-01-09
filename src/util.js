@@ -21,7 +21,7 @@ module.exports.merge = (...elements) => {
  * @returns
  */
 module.exports.uniq = (userArray) => {
-  return [...(new Set(userArray))];
+  return Array.from(new Set(userArray));
 };
 
 /**
