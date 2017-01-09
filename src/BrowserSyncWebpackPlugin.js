@@ -1,10 +1,9 @@
 const EventEmitter = require('events');
 const url = require('url');
-const _debuglog = require('util').debuglog;
+const debuglog = require('util').debuglog('BrowserSyncWebpackPlugin');
 const browserSync = require('browser-sync');
 const { desire, uniq, merge } = require('./util');
 
-const debuglog = _debuglog('BrowserSyncWebpackPlugin');
 const webpackDevMiddleware = desire('webpack-dev-middleware', () => {});
 const webpackHotMiddleware = desire('webpack-hot-middleware', () => {});
 
