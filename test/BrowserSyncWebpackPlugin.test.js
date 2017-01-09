@@ -11,6 +11,11 @@ const nodeCallback = function () {
 };
 
 describe('BrowserSyncWebpackPlugin', () => {
+  it('should exit early if options.disable is true', () => {
+    const test = new BrowserSyncWebpackPlugin({ disable: true }, {});
+    test.apply({});
+    assert.equal(test.compiler, undefined);
+  });
   describe('Events', () => {
     const mockBrowserSync = { init: nodeCallback, notify: noop };
     const mockCompiler = { plugin: nodeCallback };

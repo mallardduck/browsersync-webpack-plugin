@@ -64,9 +64,7 @@ module.exports = class extends EventEmitter {
    * @returns void
    */
   apply (compiler) {
-    if (this.options.disable) {
-      return;
-    }
+    if (this.options.disable) return;
     this.compiler = compiler;
     compiler.plugin('done', this.emit.bind(this, 'webpack.done', this));
     compiler.plugin('compilation', this.emit.bind(this, 'webpack.compilation', this));
