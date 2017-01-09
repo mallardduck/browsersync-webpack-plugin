@@ -2,7 +2,8 @@ const mergeWith = require('lodash.mergewith');
 
 /**
  * @export
- * @returns
+ * @param {object} ...elements
+ * @returns {object}
  */
 module.exports.merge = (...elements) => {
   elements.push((a, b) => {
@@ -21,4 +22,15 @@ module.exports.merge = (...elements) => {
  */
 module.exports.uniq = (userArray) => {
   return [...(new Set(userArray))];
+};
+
+/**
+ * @export
+ * @param {string} dependency
+ * @param {any} [fallback]
+ * @return {any}
+ */
+module.exports.desire = (dependency, fallback) => {
+  try { require.resolve(dependency); } catch (e) { return fallback; }
+  return require(dependency);
 };
