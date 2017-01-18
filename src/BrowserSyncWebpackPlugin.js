@@ -13,7 +13,7 @@ const webpackHotMiddleware = desire('webpack-hot-middleware', () => {});
  *
  * @class BrowserSyncWebpackPlugin
  */
-module.exports = class extends EventEmitter {
+module.exports = class BrowserSyncWebpackPlugin extends EventEmitter {
 
   /**
    * Creates an instance of BrowserSyncWebpackPlugin.
