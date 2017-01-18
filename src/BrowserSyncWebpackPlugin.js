@@ -122,11 +122,7 @@ module.exports = class BrowserSyncWebpackPlugin extends EventEmitter {
    * @public
    */
   addWebpackDevMiddleware () {
-    this.webpackDevMiddleware = webpackDevMiddleware(this.compiler, merge({
-      publicPath: this.options.publicPath,
-      stats: false,
-      noInfo: true
-    }, this.options.advanced.webpackDevMiddleware));
+    this.webpackDevMiddleware = webpackDevMiddleware(this.compiler, this.options.advanced.webpackDevMiddleware);
     this.middleware.push(this.webpackDevMiddleware);
   }
 
