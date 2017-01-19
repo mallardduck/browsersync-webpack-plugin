@@ -69,7 +69,7 @@ module.exports = class BrowserSyncWebpackPlugin extends EventEmitter {
    */
   registerSyncEvent () {
     this.on('update', (plugin, file) => {
-      if (pathHasAncestor(plugin.compiler.options.context, file)) {
+      if (pathHasAncestor(file, plugin.compiler.options.context)) {
         plugin.compiler.run(() => plugin.watcher.reload(file));
       }
     });
