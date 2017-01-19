@@ -29,6 +29,7 @@ module.exports = class BrowserSyncWebpackPlugin extends EventEmitter {
       proxyUrl: 'https://localhost:3000',
       watch: [],
       sync: true,
+      syncDelay: 1000,
       events: {
         setup () {},
         start () {},
@@ -57,7 +58,7 @@ module.exports = class BrowserSyncWebpackPlugin extends EventEmitter {
     this.on('webpack.compilation', () => this.watcher.notify('Rebuilding...'));
     this.once('webpack.done', this.start.bind(this));
     if (this.options.sync) {
-      this.once('start', this.registerSyncEvent);
+      this.once('start', () => setTimeout(this.registerSyncEvent.bind(this), this.options.syncDelay));
     }
   }
 
