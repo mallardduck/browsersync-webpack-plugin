@@ -31,4 +31,16 @@ describe('Utils', () => {
   describe('desire()', () => {
     /** TODO */
   });
+
+  describe('pathHasAncestor()', () => {
+    it('should return true if ancestorPath is direct parent', () => {
+      assert.isTrue(util.pathHasAncestor('src/test', 'src'));
+    });
+    it('should return true if targetPath and ancestorPath are equal', () => {
+      assert.isTrue(util.pathHasAncestor('src/test', 'src/test'));
+    });
+    it('should return false if ancestorPath is not an ancestor', () => {
+      assert.isFalse(util.pathHasAncestor('src/test', 'dist'));
+    });
+  });
 });

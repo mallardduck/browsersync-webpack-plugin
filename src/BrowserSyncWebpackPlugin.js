@@ -2,7 +2,7 @@ const EventEmitter = require('events');
 const url = require('url');
 const debuglog = require('util').debuglog('BrowserSyncWebpackPlugin');
 const browserSync = require('browser-sync');
-const { desire, uniq, merge } = require('./util');
+const { desire, uniq, merge, pathHasAncestor } = require('./util');
 
 const webpackDevMiddleware = desire('webpack-dev-middleware', () => {});
 const webpackHotMiddleware = desire('webpack-hot-middleware', () => {});
@@ -28,10 +28,11 @@ module.exports = class BrowserSyncWebpackPlugin extends EventEmitter {
     this.options = merge({
       proxyUrl: 'https://localhost:3000',
       watch: [],
-      syncWebpack: true,
+      sync: true,
       events: {
         setup () {},
         start () {},
+        update () {},
         add () {},
         change () {},
         unlink () {}
@@ -42,7 +43,6 @@ module.exports = class BrowserSyncWebpackPlugin extends EventEmitter {
         webpackHotMiddleware: {}
       }
     }, options);
-    this.registerEvents();
   }
 
   /**
@@ -56,6 +56,23 @@ module.exports = class BrowserSyncWebpackPlugin extends EventEmitter {
     });
     this.on('webpack.compilation', () => this.watcher.notify('Rebuilding...'));
     this.once('webpack.done', this.start.bind(this));
+    if (this.options.sync) {
+      this.once('start', this.registerSyncEvent);
+    }
+  }
+
+  /**
+   * Registers syncronization script with file system events
+   *
+   * Triggers compiler.run() when a file within compiler.options.context trigers an event
+   * @private
+   */
+  registerSyncEvent () {
+    this.on('update', (plugin, file) => {
+      if (pathHasAncestor(plugin.compiler.options.context, file)) {
+        plugin.compiler.run(() => plugin.watcher.reload(file));
+      }
+    });
   }
 
   /**
@@ -67,6 +84,7 @@ module.exports = class BrowserSyncWebpackPlugin extends EventEmitter {
    */
   apply (compiler) {
     if (this.options.disable) return;
+    this.registerEvents();
     this.compiler = compiler;
     compiler.plugin('done', this.emit.bind(this, 'webpack.done', this));
     compiler.plugin('compilation', this.emit.bind(this, 'webpack.compilation', this));
@@ -81,9 +99,7 @@ module.exports = class BrowserSyncWebpackPlugin extends EventEmitter {
     this.watcherConfig.files = [{
       match: uniq(this.watcherConfig.files.concat(this.options.watch)),
       fn: (event, file, stats) => {
-        if (this.options.syncWebpack) {
-          this.compiler.run(() => this.watcher.reload(file));
-        }
+        this.emit('update', this, file, stats, event);
         this.emit(event, this, file, stats);
       }
     }];
@@ -123,7 +139,7 @@ module.exports = class BrowserSyncWebpackPlugin extends EventEmitter {
    */
   addWebpackDevMiddleware () {
     this.webpackDevMiddleware = webpackDevMiddleware(this.compiler, merge({
-      publicPath: this.options.publicPath,
+      publicPath: this.options.publicPath || this.compiler.options.output.publicPath,
       stats: false,
       noInfo: true
     }, this.options.advanced.webpackDevMiddleware));
