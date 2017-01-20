@@ -17,12 +17,12 @@ describe('BrowserSyncWebpackPlugin', () => {
     assert.equal(test.compiler, undefined);
   });
   describe('Events', () => {
-    const mockBrowserSync = { init: nodeCallback, notify: noop };
+    const mockBrowserSync = { init: nodeCallback, notify: noop, use: noop };
     const mockCompiler = { plugin: nodeCallback };
     const makePluginInstance = config => {
       const plugin = new BrowserSyncWebpackPlugin(config, mockBrowserSync);
       // Let's not deal with the middleware
-      plugin.addWebpackDevMiddleware = plugin.addWebpackHotMiddleware = noop;
+      plugin.setupWebpackDevMiddleware = plugin.setupWebpackHotMiddleware = noop;
       return plugin;
     };
 
@@ -33,6 +33,7 @@ describe('BrowserSyncWebpackPlugin', () => {
     });
     it('fire a start event', done => {
       return makePluginInstance({
+        delay: 1, // No need for delay
         events: { start () { done(); } }
       }).apply(mockCompiler);
     });
