@@ -35,6 +35,7 @@ module.exports = class BrowserSyncWebpackPlugin extends EventEmitter {
       watch: [],
       sync: true,
       delay: 50,
+      debounce: 100,
       events: {
         setup () {},
         start () {},
@@ -223,7 +224,7 @@ module.exports = class BrowserSyncWebpackPlugin extends EventEmitter {
         target: this.options.target,
         middleware: this.middleware
       },
-      reloadDelay: this.options.delay,
+      reloadDebounce: this.options.debounce,
       files: []
     }, this.options.advanced.browserSync);
   }
