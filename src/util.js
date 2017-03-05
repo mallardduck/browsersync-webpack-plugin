@@ -1,19 +1,19 @@
-const path = require('path');
-const mergeWith = require('lodash.mergewith');
+import path from 'path';
+import mergeWith from 'lodash.mergewith';
 
 /**
  * @export
  * @param {object} ...elements
  * @returns {object}
  */
-module.exports.merge = (...elements) => {
-  elements.push((a, b) => {
-    if (Array.isArray(a) && Array.isArray(b)) {
-      return a.concat(b);
-    }
-    return undefined;
-  });
-  return mergeWith.apply(this, elements);
+export const merge = (...elements) => {
+	elements.push((a, b) => {
+		if (Array.isArray(a) && Array.isArray(b)) {
+			return a.concat(b);
+		}
+		return undefined;
+	});
+	return mergeWith.apply(this, elements);
 };
 
 /**
@@ -21,8 +21,8 @@ module.exports.merge = (...elements) => {
  * @param {array} userArray
  * @returns
  */
-module.exports.uniq = (userArray) => {
-  return Array.from(new Set(userArray));
+export const uniq = userArray => {
+	return Array.from(new Set(userArray));
 };
 
 /**
@@ -31,9 +31,9 @@ module.exports.uniq = (userArray) => {
  * @param {string} ancestorPath
  * @return {boolean}
  */
-module.exports.pathHasAncestor = (targetPath, ancestorPath) => {
-  const relativePath = path.relative(ancestorPath, targetPath);
-  return relativePath.substr(0, 2) !== '..';
+export const pathHasAncestor = (targetPath, ancestorPath) => {
+	const relativePath = path.relative(ancestorPath, targetPath);
+	return relativePath.substr(0, 2) !== '..';
 };
 
 /**
@@ -42,7 +42,13 @@ module.exports.pathHasAncestor = (targetPath, ancestorPath) => {
  * @param {any} [fallback]
  * @return {any}
  */
-module.exports.desire = (dependency, fallback) => {
-  try { require.resolve(dependency); } catch (e) { return fallback; }
-  return require(dependency);
+export const desire = (dependency, fallback) => {
+	try {
+		require.resolve(dependency);
+	} catch (err) {
+		return fallback;
+	}
+	return require(dependency); // eslint-disable-line import/no-dynamic-require
 };
+
+export default { merge, uniq, pathHasAncestor, desire };

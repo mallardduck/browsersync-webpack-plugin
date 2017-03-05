@@ -6,41 +6,67 @@
   "repository": "https://github.com/qwp6t/browsersync-webpack-plugin.git",
   "author": "QWp6t",
   "license": "OSL-3.0",
+  "xo": {
+    "rules": {
+      "unicorn/filename-case": 0,
+      "object-curly-spacing": [
+        "error",
+        "always"
+      ],
+      "brace-style": [
+        "error",
+        "1tbs",
+        {
+          "allowSingleLine": true
+        }
+      ]
+    }
+  },
+  "babel": {
+    "presets": [
+      [
+        "env",
+        {
+          "targets": {
+            "node": 6.5
+          }
+        }
+      ]
+    ]
+  },
+  "jest": {
+    "coverageDirectory": "coverage"
+  },
   "dependencies": {
     "lodash.mergewith": "^4.6.0"
   },
   "peerDependencies": {
-    "browser-sync": "^2.18.5"
+    "browser-sync": "^2.18.8"
   },
   "optionalDependencies": {
     "bs-html-injector": "^3.0.3",
-    "webpack-dev-middleware": "^1.9.0",
-    "webpack-hot-middleware": "^2.15.0"
+    "webpack-dev-middleware": "^1.10.1",
+    "webpack-hot-middleware": "^2.17.1"
   },
   "devDependencies": {
-    "browser-sync": "^2.18.6",
+    "babel-jest": "^19.0.0",
+    "babel-preset-env": "^1.2.0",
+    "browser-sync": "^2.18.8",
     "bs-html-injector": "^3.0.3",
-    "buble": "^0.15.2",
-    "chai": "^3.5.0",
-    "istanbul": "^0.4.5",
-    "memory-fs": "^0.4.1",
-    "mocha": "^3.2.0",
-    "randomstring": "^1.1.5",
-    "semistandard": "^9.2.1",
-    "webpack": "2.2.0",
-    "webpack-dev-middleware": "^1.9.0",
-    "webpack-hot-middleware": "^2.15.0"
+    "glob": "^7.1.1",
+    "jest": "^19.0.2",
+    "webpack": "^2.2.1",
+    "webpack-dev-middleware": "^1.10.1",
+    "webpack-hot-middleware": "^2.17.1",
+    "xo": "^0.17.1"
   },
   "scripts": {
     "prebuild": "npm run lint",
-    "build": "npm run build:main && npm run build:util",
-    "build:main": "buble src/BrowserSyncWebpackPlugin.js -o index.js",
-    "build:util": "buble src/util.js -o util.js",
-    "lint": "semistandard src/* test/*",
-    "pretest": "npm run build",
-    "test": "mocha --colors",
-    "test:report": "istanbul cover ./node_modules/mocha/bin/_mocha -- -R spec",
-    "test:coverage": "istanbul cover ./node_modules/mocha/bin/_mocha --report lcovonly -- -R spec",
-    "prepublish": "npm test"
+    "build": "webpack --config=build/config.js",
+    "postbuild": "npm test",
+    "lint": "xo src/* test/*",
+    "test": "jest",
+    "coverage": "npm test -- --coverage",
+    "prepublish": "npm build"
   }
 }

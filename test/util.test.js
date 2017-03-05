@@ -1,46 +1,48 @@
-/* eslint-env mocha */
+/* eslint-env jest */
 
-const util = require('../util');
-const { assert } = require('chai');
+import { merge, uniq, pathHasAncestor, desire } from '../src/util'; // eslint-disable-line no-unused-vars
 
 describe('Utils', () => {
-  describe('merge()', () => {
+	describe('merge()', () => {
     /** setup */
-    const dataset = { str: 'foo', arr: ['foo', 'bar'], obj: { foo: 'bar' } };
-    const append = { arr: ['biz', 'baz'] };
-    const final = dataset;
-    final.arr.push('biz', 'baz');
+		const dataset = { str: 'foo', arr: ['foo', 'bar'], obj: { foo: 'bar' } };
+		const append = { arr: ['biz', 'baz'] };
+		const final = dataset;
+		final.arr.concat(append.arr);
 
     /** tests */
-    it('should concatenate nested arrays', () => {
-      assert.deepEqual(util.merge(dataset, append), final);
-    });
-  });
+		test('should concatenate nested arrays', () => {
+			expect(merge(dataset, append)).toBe(final);
+		});
+	});
 
-  describe('uniq()', () => {
+	describe('uniq()', () => {
     /** setup */
-    const notUnique = ['foo', 'foo', 'bar', 'bar', 'foo', 'bar', 'bar', 'foo'];
-    const unique = ['foo', 'bar'];
+		const notUnique = ['foo', 'foo', 'bar', 'bar', 'foo', 'bar', 'bar', 'foo'];
+		const unique = ['foo', 'bar'];
 
     /** tests */
-    it('should remove repeated elements in an array', () => {
-      assert.deepEqual(util.uniq(notUnique), unique);
-    });
-  });
+		test('should remove repeated elements in an array', () => {
+			expect(uniq(notUnique)).toEqual(unique);
+		});
+	});
 
-  describe('desire()', () => {
+	describe.skip('desire()', () => {
     /** TODO */
-  });
+	});
 
-  describe('pathHasAncestor()', () => {
-    it('should return true if ancestorPath is direct parent', () => {
-      assert.isTrue(util.pathHasAncestor('src/test', 'src'));
-    });
-    it('should return true if targetPath and ancestorPath are equal', () => {
-      assert.isTrue(util.pathHasAncestor('src/test', 'src/test'));
-    });
-    it('should return false if ancestorPath is not an ancestor', () => {
-      assert.isFalse(util.pathHasAncestor('src/test', 'dist'));
-    });
-  });
+	describe('pathHasAncestor()', () => {
+		test('should return true if ancestorPath is ancestor', () => {
+			expect(pathHasAncestor('src/grandparent/parent/child', 'src/grandparent')).toBe(true);
+		});
+		test('should return true if ancestorPath is direct parent', () => {
+			expect(pathHasAncestor('src/test', 'src')).toBe(true);
+		});
+		test('should return true if targetPath and ancestorPath are equal', () => {
+			expect(pathHasAncestor('src/test', 'src/test')).toBe(true);
+		});
+		test('should return false if ancestorPath is not an ancestor', () => {
+			expect(pathHasAncestor('src/test', 'dist')).toBe(false);
+		});
+	});
 });
