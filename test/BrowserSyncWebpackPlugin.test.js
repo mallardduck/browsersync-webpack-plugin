@@ -4,7 +4,8 @@ import EventEmitter from 'events';
 import BrowserSyncWebpackPlugin from '../src/BrowserSyncWebpackPlugin';
 
 const noop = jest.fn();
-const nodeCallback = function (...args) {
+const nodeCallback = function () {
+	const args = Array.from(arguments);
 	const fn = args[args.length - 1];
 	fn.apply(fn);
 };

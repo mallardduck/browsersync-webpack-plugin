@@ -3,13 +3,9 @@ sudo: false
 language: node_js
 node_js:
 - 6
-- 7
-cache:
-  yarn: true
-  directories:
-  - node_modules
+cache: yarn
 script:
-- yarn test
+- yarn build
 deploy:
   provider: npm
   skip_cleanup: true
