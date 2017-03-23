@@ -1,6 +1,6 @@
 {
 	"name": "browsersync-webpack-plugin",
-	"version": "0.4.1",
+	"version": "0.5.0",
 	"description": "Combines BrowserSync, webpack-dev-middleware, and webpack-hot-middleware into one ezpz plugin.",
 	"main": "index.js",
 	"repository": "https://github.com/qwp6t/browsersync-webpack-plugin.git",
