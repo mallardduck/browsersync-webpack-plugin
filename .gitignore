@@ -1,13 +1,4 @@
-# Logs
-npm-debug.log*
-
-# Coverage directory used by jest
-coverage
-
-# Dependency directories
-node_modules
-jspm_packages
-
-# Builds
 /index.js
-/util.js
+coverage
+node_modules
+npm-debug.log*

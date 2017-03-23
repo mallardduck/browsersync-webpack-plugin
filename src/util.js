@@ -1,27 +1,11 @@
-import path from 'path';
-import mergeWith from 'lodash.mergewith';
-
-/**
- * @export
- * @param {object} ...elements
- * @returns {object}
- */
-export const merge = (...elements) => {
-	elements.push((a, b) => {
-		if (Array.isArray(a) && Array.isArray(b)) {
-			return a.concat(b);
-		}
-		return undefined;
-	});
-	return mergeWith.apply(this, elements);
-};
+const path = require('path');
 
 /**
  * @export
  * @param {array} userArray
  * @returns
  */
-export const uniq = userArray => {
+module.exports.uniq = userArray => {
 	return Array.from(new Set(userArray));
 };
 
@@ -31,7 +15,7 @@ export const uniq = userArray => {
  * @param {string} ancestorPath
  * @return {boolean}
  */
-export const pathHasAncestor = (targetPath, ancestorPath) => {
+module.exports.pathHasAncestor = (targetPath, ancestorPath) => {
 	const relativePath = path.relative(ancestorPath, targetPath);
 	return relativePath.substr(0, 2) !== '..';
 };
@@ -42,7 +26,7 @@ export const pathHasAncestor = (targetPath, ancestorPath) => {
  * @param {any} [fallback]
  * @return {any}
  */
-export const desire = (dependency, fallback) => {
+module.exports.desire = (dependency, fallback) => {
 	try {
 		require.resolve(dependency);
 	} catch (err) {
@@ -50,5 +34,3 @@ export const desire = (dependency, fallback) => {
 	}
 	return require(dependency); // eslint-disable-line import/no-dynamic-require
 };
-
-export default { merge, uniq, pathHasAncestor, desire };

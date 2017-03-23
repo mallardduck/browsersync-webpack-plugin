@@ -1,34 +1,32 @@
 /* eslint-env jest */
 
-import { merge, uniq, pathHasAncestor, desire } from '../src/util'; // eslint-disable-line no-unused-vars
+import { uniq, pathHasAncestor, desire } from '../src/util';
 
 describe('Utils', () => {
-	describe('merge()', () => {
-    /** setup */
-		const dataset = { str: 'foo', arr: ['foo', 'bar'], obj: { foo: 'bar' } };
-		const append = { arr: ['biz', 'baz'] };
-		const final = dataset;
-		final.arr.concat(append.arr);
-
-    /** tests */
-		test('should concatenate nested arrays', () => {
-			expect(merge(dataset, append)).toBe(final);
-		});
-	});
-
 	describe('uniq()', () => {
-    /** setup */
+		/** setup */
 		const notUnique = ['foo', 'foo', 'bar', 'bar', 'foo', 'bar', 'bar', 'foo'];
 		const unique = ['foo', 'bar'];
 
-    /** tests */
+		/** tests */
 		test('should remove repeated elements in an array', () => {
 			expect(uniq(notUnique)).toEqual(unique);
 		});
 	});
 
-	describe.skip('desire()', () => {
-    /** TODO */
+	describe('desire()', () => {
+		test('should fail gracefully if module is not found', () => {
+			expect(() => desire('notarealmodule')).not.toThrow();
+		});
+		test('should return undefined if module is not found', () => {
+			expect(desire('notarealmodule')).toBe(undefined);
+		});
+		test('should return a fallback value if module is not found', () => {
+			expect(desire('notarealmodule', 'fallback')).toBe('fallback');
+		});
+		test('should return a module if it exists', () => {
+			expect(desire('fs')).toBe(require('fs'));
+		});
 	});
 
 	describe('pathHasAncestor()', () => {
