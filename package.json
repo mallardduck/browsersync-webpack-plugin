@@ -54,9 +54,8 @@
 		"xo": "^0.18.0"
 	},
 	"scripts": {
-		"prebuild": "npm run lint",
+		"prebuild": "npm run lint && npm test",
 		"build": "node build/build.js",
-		"postbuild": "npm test",
 		"lint": "xo src/* test/* build/*",
 		"test": "jest",
 		"coverage": "jest --coverage",
