@@ -1,6 +1,6 @@
 /* eslint-env jest */
 
-import { uniq, pathHasAncestor, desire } from '../src/util';
+import { uniq, desire } from '../src/util';
 
 describe('Utils', () => {
 	describe('uniq()', () => {
@@ -26,21 +26,6 @@ describe('Utils', () => {
 		});
 		test('should return a module if it exists', () => {
 			expect(desire('fs')).toBe(require('fs'));
-		});
-	});
-
-	describe('pathHasAncestor()', () => {
-		test('should return true if ancestorPath is ancestor', () => {
-			expect(pathHasAncestor('src/grandparent/parent/child', 'src/grandparent')).toBe(true);
-		});
-		test('should return true if ancestorPath is direct parent', () => {
-			expect(pathHasAncestor('src/test', 'src')).toBe(true);
-		});
-		test('should return true if targetPath and ancestorPath are equal', () => {
-			expect(pathHasAncestor('src/test', 'src/test')).toBe(true);
-		});
-		test('should return false if ancestorPath is not an ancestor', () => {
-			expect(pathHasAncestor('src/test', 'dist')).toBe(false);
 		});
 	});
 });

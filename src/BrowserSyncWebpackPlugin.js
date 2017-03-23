@@ -5,7 +5,7 @@ const debuglog = require('util').debuglog('BrowserSyncWebpackPlugin');
 const browserSync = require('browser-sync');
 const merge = require('webpack-merge');
 
-const { pathHasAncestor, desire, uniq } = require('./util');
+const { desire, uniq } = require('./util');
 
 const htmlInjector = desire('bs-html-injector');
 const webpackDevMiddleware = desire('webpack-dev-middleware');
@@ -66,11 +66,6 @@ module.exports = class BrowserSyncWebpackPlugin extends EventEmitter {
 		this.once('webpack.done', this.start.bind(this));
 		this.on('ready', () => {
 			this.ready = true;
-		});
-		this.on('update', (plugin, file) => {
-			if (pathHasAncestor(file, plugin.compiler.options.context)) {
-				plugin.compiler.run(() => plugin.watcher.reload(file));
-			}
 		});
 	}
 
