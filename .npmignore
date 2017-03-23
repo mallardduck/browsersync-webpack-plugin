@@ -1,17 +1,10 @@
-# Logs
-npm-debug.log*
-
-# Coverage directory used by jest
-coverage
-
-# Sauce
-src
-
-# Tests
-test
-
-# Other non-essential stuff
 .editorconfig
-.gitignore
 .gitattributes
+.github
+.gitignore
 .travis.yml
+build
+coverage
+npm-debug.log*
+src
+test
