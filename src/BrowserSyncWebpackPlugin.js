@@ -105,7 +105,7 @@ module.exports = class BrowserSyncWebpackPlugin extends EventEmitter {
 	 * @private
 	 */
 	setup() {
-		if (htmlInjector && this.options.watch) {
+		if (this.useHtmlInjector() && this.options.watch) {
 			this.watcher.use(htmlInjector, {
 				files: Array.isArray(this.options.watch) ? uniq(this.options.watch) : [this.options.watch]
 			});
@@ -158,7 +158,7 @@ module.exports = class BrowserSyncWebpackPlugin extends EventEmitter {
 				target: this.options.target,
 				middleware: this.middleware
 			},
-			files: [],
+			files: (!this.useHtmlInjector() && this.options.watch) ? (Array.isArray(this.options.watch) ? uniq(this.options.watch) : [this.options.watch]) : [],
 			reloadDebounce,
 			watchOptions
 		}, this.options.advanced.browserSync);
@@ -184,5 +184,12 @@ module.exports = class BrowserSyncWebpackPlugin extends EventEmitter {
 		const webpackWatchOptions = options.watchOptions || {};
 		const devServerWatchOptions = (options.devServer ? options.devServer.watchOptions : {}) || {};
 		return merge(webpackWatchOptions, devServerWatchOptions);
+	}
+
+	/**
+	 * Use htmlInjector
+	 */
+	useHtmlInjector() {
+		return htmlInjector && url.parse(this.options.proxyUrl).protocol === 'http:';
 	}
 };
