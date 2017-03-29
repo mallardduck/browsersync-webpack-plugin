@@ -48,7 +48,8 @@ module.exports = class BrowserSyncWebpackPlugin extends EventEmitter {
 			advanced: {
 				browserSync: {},
 				webpackDevMiddleware: {},
-				webpackHotMiddleware: {}
+				webpackHotMiddleware: {},
+				injectorRequestOptions: {}
 			}
 		}, options);
 	}
@@ -107,7 +108,20 @@ module.exports = class BrowserSyncWebpackPlugin extends EventEmitter {
 	setup() {
 		if (this.useHtmlInjector() && this.options.watch) {
 			this.watcher.use(htmlInjector, {
-				files: Array.isArray(this.options.watch) ? uniq(this.options.watch) : [this.options.watch]
+				files: Array.isArray(this.options.watch) ? uniq(this.options.watch) : [this.options.watch],
+				/**
+				 * This option does nothing at the moment.
+				 * I'm awaiting feedback on a PR.
+				 *
+				 * @link https://github.com/shakyShane/html-injector/pull/29
+				 *
+				 * In the meantime either don't use SSL or set the following
+				 * super insecure setting:
+				 *   process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0;
+				 */
+				requestOptions: Object.assign({
+					agentOptions: { rejectUnauthorized: false }
+				}, this.options.advanced.injectorRequestOptions)
 			});
 		}
 		if (webpackDevMiddleware) {
@@ -190,6 +204,6 @@ module.exports = class BrowserSyncWebpackPlugin extends EventEmitter {
 	 * Use htmlInjector
 	 */
 	useHtmlInjector() {
-		return htmlInjector && url.parse(this.options.proxyUrl).protocol === 'http:';
+		return htmlInjector !== undefined;
 	}
 };
