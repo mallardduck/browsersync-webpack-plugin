@@ -47,11 +47,11 @@
 		"bs-html-injector": "^3.0.3",
 		"glob": "^7.1.1",
 		"jest": "^19.0.2",
-		"module-concat": "^2.1.2",
-		"webpack": "^2.2.1",
+		"module-concat": "^2.1.4",
+		"webpack": "^2.3.2",
 		"webpack-dev-middleware": "^1.10.1",
 		"webpack-hot-middleware": "^2.17.1",
-		"xo": "^0.18.0"
+		"xo": "^0.18.1"
 	},
 	"scripts": {
 		"prebuild": "npm run lint && npm test",
