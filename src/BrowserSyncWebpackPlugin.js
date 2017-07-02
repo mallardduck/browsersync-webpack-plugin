@@ -25,6 +25,7 @@ module.exports = class BrowserSyncWebpackPlugin extends EventEmitter {
 	 */
 	constructor(options, watcher = browserSync.create()) {
 		super();
+		this.open = true;
 		this.compiler = null;
 		this.middleware = [];
 		this.ready = false;
@@ -38,12 +39,12 @@ module.exports = class BrowserSyncWebpackPlugin extends EventEmitter {
 			delay: 50,
 			debounce: 0,
 			events: {
-				setup() {},
-				ready() {},
-				update() {},
-				add() {},
-				change() {},
-				unlink() {}
+				setup() { },
+				ready() { },
+				update() { },
+				add() { },
+				change() { },
+				unlink() { }
 			},
 			advanced: {
 				browserSync: {},
@@ -166,6 +167,7 @@ module.exports = class BrowserSyncWebpackPlugin extends EventEmitter {
 		const watchOptions = merge({ ignoreInitial: true }, this.getPollOptions());
 		const reloadDebounce = this.options.debounce || watchOptions.aggregateTimeout || 0;
 		this.watcherConfig = merge({
+			open: this.options.open,
 			host: url.parse(this.options.proxyUrl).hostname,
 			port: url.parse(this.options.proxyUrl).port,
 			proxy: {
