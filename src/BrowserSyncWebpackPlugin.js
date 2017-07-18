@@ -18,7 +18,6 @@ const webpackHotMiddleware = desire('webpack-hot-middleware');
  * @class BrowserSyncWebpackPlugin
  */
 module.exports = class BrowserSyncWebpackPlugin extends EventEmitter {
-
 	/**
 	 * Creates an instance of BrowserSyncWebpackPlugin.
 	 * @param {object} options
@@ -32,27 +31,30 @@ module.exports = class BrowserSyncWebpackPlugin extends EventEmitter {
 		this.resolvers = [];
 		this.watcher = watcher;
 		this.watcherConfig = {};
-		this.options = merge({
-			proxyUrl: 'https://localhost:3000',
-			watch: [],
-			sync: true,
-			delay: 50,
-			debounce: 0,
-			events: {
-				setup() { },
-				ready() { },
-				update() { },
-				add() { },
-				change() { },
-				unlink() { }
+		this.options = merge(
+			{
+				proxyUrl: 'https://localhost:3000',
+				watch: [],
+				sync: true,
+				delay: 50,
+				debounce: 0,
+				events: {
+					setup() {},
+					ready() {},
+					update() {},
+					add() {},
+					change() {},
+					unlink() {},
+				},
+				advanced: {
+					browserSync: {},
+					webpackDevMiddleware: {},
+					webpackHotMiddleware: {},
+					injectorRequestOptions: {},
+				},
 			},
-			advanced: {
-				browserSync: {},
-				webpackDevMiddleware: {},
-				webpackHotMiddleware: {},
-				injectorRequestOptions: {}
-			}
-		}, options);
+			options
+		);
 	}
 
 	/**
@@ -61,10 +63,15 @@ module.exports = class BrowserSyncWebpackPlugin extends EventEmitter {
 	 */
 	registerEvents() {
 		Object.keys(this.options.events).forEach(event => {
-			this.on(event, debuglog.bind(debuglog, `Event: ${event}`));
+			this.on(
+				event,
+				debuglog.bind(debuglog, `Event: ${event}`)
+			);
 			this.on(event, this.options.events[event]);
 		});
-		this.on('webpack.compilation', () => this.watcher.notify('Rebuilding...'));
+		this.on('webpack.compilation', () =>
+			this.watcher.notify('Rebuilding...')
+		);
 		this.once('webpack.done', this.start.bind(this));
 		this.on('ready', () => {
 			this.ready = true;
@@ -84,8 +91,14 @@ module.exports = class BrowserSyncWebpackPlugin extends EventEmitter {
 		}
 		this.registerEvents();
 		this.compiler = compiler;
-		compiler.plugin('done', this.emit.bind(this, 'webpack.done', this));
-		compiler.plugin('compilation', this.emit.bind(this, 'webpack.compilation', this));
+		compiler.plugin(
+			'done',
+			this.emit.bind(this, 'webpack.done', this)
+		);
+		compiler.plugin(
+			'compilation',
+			this.emit.bind(this, 'webpack.compilation', this)
+		);
 	}
 
 	/**
@@ -94,11 +107,17 @@ module.exports = class BrowserSyncWebpackPlugin extends EventEmitter {
 	 */
 	start() {
 		this.setup();
-		this.watcher.emitter.on('init', this.emit.bind(this, 'ready', this, this.watcher));
-		this.watcher.emitter.on('file:changed', (event, file, stats) => {
-			this.emit('update', this, file, stats, event);
-			this.emit(event, this, file, stats);
-		});
+		this.watcher.emitter.on(
+			'init',
+			this.emit.bind(this, 'ready', this, this.watcher)
+		);
+		this.watcher.emitter.on(
+			'file:changed',
+			(event, file, stats) => {
+				this.emit('update', this, file, stats, event);
+				this.emit(event, this, file, stats);
+			}
+		);
 		this.watcher.init(this.watcherConfig);
 	}
 
@@ -109,7 +128,9 @@ module.exports = class BrowserSyncWebpackPlugin extends EventEmitter {
 	setup() {
 		if (this.useHtmlInjector() && this.options.watch) {
 			this.watcher.use(htmlInjector, {
-				files: Array.isArray(this.options.watch) ? uniq(this.options.watch) : [this.options.watch],
+				files: Array.isArray(this.options.watch)
+					? uniq(this.options.watch)
+					: [this.options.watch],
 				/**
 				 * This option does nothing at the moment.
 				 * I'm awaiting feedback on a PR.
@@ -120,9 +141,15 @@ module.exports = class BrowserSyncWebpackPlugin extends EventEmitter {
 				 * super insecure setting:
 				 *   process.env.NODE_TLS_REJECT_UNAUTHORIZED = 0;
 				 */
-				requestOptions: Object.assign({
-					agentOptions: { rejectUnauthorized: false }
-				}, this.options.advanced.injectorRequestOptions)
+				requestOptions: Object.assign(
+					{
+						agentOptions: {
+							rejectUnauthorized: false,
+						},
+					},
+					this.options.advanced
+						.injectorRequestOptions
+				),
 			});
 		}
 		if (webpackDevMiddleware) {
@@ -132,6 +159,7 @@ module.exports = class BrowserSyncWebpackPlugin extends EventEmitter {
 			this.setupWebpackHotMiddleware();
 		}
 		this.config();
+		this.checkProtocols(this.options.proxyUrl, this.options.target);
 		this.emit('setup', this, this.watcherConfig);
 	}
 
@@ -140,11 +168,21 @@ module.exports = class BrowserSyncWebpackPlugin extends EventEmitter {
 	 * @public
 	 */
 	setupWebpackDevMiddleware() {
-		this.webpackDevMiddleware = webpackDevMiddleware(this.compiler, merge({
-			publicPath: this.options.publicPath || this.compiler.options.output.publicPath,
-			stats: false,
-			noInfo: true
-		}, this.compiler.options.devServer, this.options.advanced.webpackDevMiddleware));
+		this.webpackDevMiddleware = webpackDevMiddleware(
+			this.compiler,
+			merge(
+				{
+					publicPath:
+						this.options.publicPath ||
+						this.compiler.options.output
+							.publicPath,
+					stats: false,
+					noInfo: true,
+				},
+				this.compiler.options.devServer,
+				this.options.advanced.webpackDevMiddleware
+			)
+		);
 		this.middleware.push(this.webpackDevMiddleware);
 	}
 
@@ -153,9 +191,17 @@ module.exports = class BrowserSyncWebpackPlugin extends EventEmitter {
 	 * @public
 	 */
 	setupWebpackHotMiddleware() {
-		this.webpackHotMiddleware = webpackHotMiddleware(this.compiler, merge({
-			log: this.watcher.notify.bind(this.watcher)
-		}, this.options.advanced.webpackHotMiddleware));
+		this.webpackHotMiddleware = webpackHotMiddleware(
+			this.compiler,
+			merge(
+				{
+					log: this.watcher.notify.bind(
+						this.watcher
+					),
+				},
+				this.options.advanced.webpackHotMiddleware
+			)
+		);
 		this.middleware.push(this.webpackHotMiddleware);
 	}
 
@@ -164,31 +210,48 @@ module.exports = class BrowserSyncWebpackPlugin extends EventEmitter {
 	 * @private
 	 */
 	config() {
-		const watchOptions = merge({ ignoreInitial: true }, this.getPollOptions());
-		const reloadDebounce = this.options.debounce || watchOptions.aggregateTimeout || 0;
-		this.watcherConfig = merge({
-			open: this.options.open,
-			host: url.parse(this.options.proxyUrl).hostname,
-			port: url.parse(this.options.proxyUrl).port,
-			proxy: {
-				target: this.options.target,
-				middleware: this.middleware
+		const watchOptions = merge(
+			{ ignoreInitial: true },
+			this.getPollOptions()
+		);
+		const reloadDebounce =
+			this.options.debounce ||
+			watchOptions.aggregateTimeout ||
+			0;
+		this.watcherConfig = merge(
+			{
+				open: this.options.open,
+				host: url.parse(this.options.proxyUrl).hostname,
+				port: url.parse(this.options.proxyUrl).port,
+				proxy: {
+					target: this.options.target,
+					middleware: this.middleware,
+				},
+				files:
+					!this.useHtmlInjector() &&
+					this.options.watch
+						? Array.isArray(
+								this.options.watch
+							)
+							? uniq(this.options.watch)
+							: [this.options.watch]
+						: [],
+				reloadDebounce,
+				watchOptions,
 			},
-			files: (!this.useHtmlInjector() && this.options.watch) ? (Array.isArray(this.options.watch) ? uniq(this.options.watch) : [this.options.watch]) : [],
-			reloadDebounce,
-			watchOptions
-		}, this.options.advanced.browserSync);
+			this.options.advanced.browserSync
+		);
 	}
 
 	getPollOptions() {
 		const watchOptions = this.getWatchOptions();
 		const polling = watchOptions.poll || false;
 		const usePolling = Boolean(polling);
-		const interval = (polling === usePolling) ? 100 : polling;
+		const interval = polling === usePolling ? 100 : polling;
 		return {
 			interval,
 			usePolling,
-			binaryInterval: Math.min(interval * 3, interval + 200)
+			binaryInterval: Math.min(interval * 3, interval + 200),
 		};
 	}
 
@@ -198,7 +261,10 @@ module.exports = class BrowserSyncWebpackPlugin extends EventEmitter {
 	getWatchOptions() {
 		const options = this.compiler.options;
 		const webpackWatchOptions = options.watchOptions || {};
-		const devServerWatchOptions = (options.devServer ? options.devServer.watchOptions : {}) || {};
+		const devServerWatchOptions =
+			(options.devServer
+				? options.devServer.watchOptions
+				: {}) || {};
 		return merge(webpackWatchOptions, devServerWatchOptions);
 	}
 
@@ -207,5 +273,31 @@ module.exports = class BrowserSyncWebpackPlugin extends EventEmitter {
 	 */
 	useHtmlInjector() {
 		return htmlInjector !== undefined;
+	}
+
+	/**
+	 * Check protocols of both proxy and target URLs
+	 */
+	checkProtocols(proxyUrl, targetUrl) {
+		if (!(proxyUrl && targetUrl)) {
+			return;
+		}
+		const proxyUrlProtocol = url
+			.parse(proxyUrl)
+			.protocol.slice(0, -1);
+		const targetUrlProtocol = url
+			.parse(targetUrl)
+			.protocol.slice(0, -1);
+		if (proxyUrlProtocol !== targetUrlProtocol) {
+			console.warn(
+				'Mismatched protocols. Things might not work right.'
+			);
+			console.warn(
+				`Your proxy uses the protocol: ${proxyUrlProtocol}`
+			);
+			console.warn(
+				`Your target uses the protocol: ${targetUrlProtocol}`
+			);
+		}
 	}
 };

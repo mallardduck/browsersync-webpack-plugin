@@ -6,27 +6,21 @@
 	"repository": "https://github.com/qwp6t/browsersync-webpack-plugin.git",
 	"author": "QWp6t",
 	"license": "OSL-3.0",
-	"xo": {
-		"env": { "node": true, "es6": true },
-		"parserOptions": {
-			"ecmaVersion": 2017,
-			"sourceType": "module"
-		},
-		"rules": {
-			"unicorn/filename-case": 0,
-			"object-curly-spacing": [2, "always"],
-			"brace-style": [2, "1tbs", { "allowSingleLine": true }],
-			"capitalized-comments": [0, "never"]
-		}
+	"lint-staged": {
+		"*.js": ["lint", "git add"]
 	},
 	"babel": {
-		"presets": [
-			["env", { "targets": { "node": 4.3 } }]
-		],
+		"presets": [["env", { "targets": { "node": 4.3 } }]],
 		"comments": false
 	},
 	"jest": {
 		"coverageDirectory": "coverage"
+	},
+	"prettier": {
+		"useTabs": true,
+		"singleQuote": true,
+		"tabWidth": 8,
+		"trailingComma": "es5"
 	},
 	"dependencies": {
 		"webpack-merge": "^4.1.0"
@@ -46,21 +40,23 @@
 		"browser-sync": "^2.18.8",
 		"bs-html-injector": "^3.0.3",
 		"glob": "^7.1.1",
+		"husky": "^0.14.3",
 		"jest": "^19.0.2",
+		"lint-staged": "^4.0.2",
 		"module-concat": "^2.1.4",
+		"prettier": "^1.5.3",
 		"webpack": "^2.3.2",
 		"webpack-dev-middleware": "^1.10.1",
-		"webpack-hot-middleware": "^2.17.1",
-		"xo": "^0.18.1"
+		"webpack-hot-middleware": "^2.17.1"
 	},
 	"scripts": {
 		"prebuild": "npm run lint && npm test",
 		"build": "node build/build.js",
-		"lint": "xo src/* test/* build/*",
+		"lint": "prettier --write --use-tabs --single-quote --tab-width=8 --trailing-comma=es5 '{test,src}/**/*.js'",
 		"test": "jest",
 		"coverage": "jest --coverage",
 		"start": "jest --watch --notify",
-		"prepublish": "npm build"
+		"prepublish": "npm run build",
+		"precommit": "lint-staged"
 	}
 }
-

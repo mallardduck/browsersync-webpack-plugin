@@ -12,9 +12,9 @@ const badPaths = ['.test.js'];
 
 const globToCover = resolve(__dirname, '../src/**/*.js');
 
-const filesToCover = glob.sync(globToCover).filter(filepath =>
-	badPaths.every(file => !filepath.includes(file))
-);
+const filesToCover = glob
+	.sync(globToCover)
+	.filter(filepath => badPaths.every(file => !filepath.includes(file)));
 
 filesToCover.forEach(desire);
 

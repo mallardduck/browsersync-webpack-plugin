@@ -5,7 +5,16 @@ import { uniq, desire } from '../src/util';
 describe('Utils', () => {
 	describe('uniq()', () => {
 		/** setup */
-		const notUnique = ['foo', 'foo', 'bar', 'bar', 'foo', 'bar', 'bar', 'foo'];
+		const notUnique = [
+			'foo',
+			'foo',
+			'bar',
+			'bar',
+			'foo',
+			'bar',
+			'bar',
+			'foo',
+		];
 		const unique = ['foo', 'bar'];
 
 		/** tests */
@@ -22,7 +31,9 @@ describe('Utils', () => {
 			expect(desire('notarealmodule')).toBe(undefined);
 		});
 		test('should return a fallback value if module is not found', () => {
-			expect(desire('notarealmodule', 'fallback')).toBe('fallback');
+			expect(desire('notarealmodule', 'fallback')).toBe(
+				'fallback'
+			);
 		});
 		test('should return a module if it exists', () => {
 			expect(desire('fs')).toBe(require('fs'));
