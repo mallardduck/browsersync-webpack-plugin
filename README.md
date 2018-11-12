@@ -1,3 +1,5 @@
+I have abandoned this project and have no intention of updating it.
+
 # browsersync-webpack-plugin
 [![Build Status](https://travis-ci.org/QWp6t/browsersync-webpack-plugin.svg?branch=master)](https://travis-ci.org/QWp6t/browsersync-webpack-plugin)
 [![devDependency Status](https://img.shields.io/david/dev/QWp6t/browsersync-webpack-plugin.svg?style=flat-square)](https://david-dm.org/QWp6t/browsersync-webpack-plugin#info=devDependencies)
