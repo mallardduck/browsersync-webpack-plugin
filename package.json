@@ -3,7 +3,7 @@
 	"version": "0.6.0",
 	"description": "Combines BrowserSync, webpack-dev-middleware, and webpack-hot-middleware into one ezpz plugin.",
 	"main": "index.js",
-	"repository": "https://github.com/radist2s/browsersync-webpack-plugin.git",
+	"repository": "https://github.com/mallardduck/browsersync-webpack-plugin.git",
 	"author": "QWp6t",
 	"license": "OSL-3.0",
 	"lint-staged": {
