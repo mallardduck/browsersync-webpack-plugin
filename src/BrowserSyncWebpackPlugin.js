@@ -31,6 +31,7 @@ module.exports = class BrowserSyncWebpackPlugin extends EventEmitter {
 		this.resolvers = [];
 		this.watcher = watcher;
 		this.watcherConfig = {};
+		this.watcherCallback = null;
 		this.options = merge(
 			{
 				proxyUrl: 'https://localhost:3000',
@@ -38,6 +39,7 @@ module.exports = class BrowserSyncWebpackPlugin extends EventEmitter {
 				sync: true,
 				delay: 50,
 				debounce: 0,
+				callback: null,
 				events: {
 					setup() {},
 					ready() {},
@@ -118,7 +120,7 @@ module.exports = class BrowserSyncWebpackPlugin extends EventEmitter {
 				this.emit(event, this, file, stats);
 			}
 		);
-		this.watcher.init(this.watcherConfig);
+		this.watcher.init(this.watcherConfig, this.watcherCallback);
 	}
 
 	/**
@@ -241,6 +243,7 @@ module.exports = class BrowserSyncWebpackPlugin extends EventEmitter {
 			},
 			this.options.advanced.browserSync
 		);
+		this.watcherCallback = this.options.callback;
 	}
 
 	getPollOptions() {
